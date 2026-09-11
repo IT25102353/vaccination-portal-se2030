@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('Vaccination Centers')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('centers')}"></nav>
+
+<div class="container my-4">
+    <div class="page-header">
+        <h1><i data-lucide="hospital"></i> Vaccination Center &amp; Facility Management</h1>
+        <a href="/centers/new" class="btn btn-primary icon-btn">
+            <i data-lucide="plus"></i> Add Center
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>Center Name</th>
+                        <th>Address</th>
+                        <th>District</th>
+                        <th>Contact</th>
+                        <th>Capacity/Day</th>
+                        <th>Operating Hours</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="center : ${centers}">
+                        <td th:text="${center.centerName}"></td>
+                        <td th:text="${center.address}"></td>
+                        <td th:text="${center.district}"></td>
+                        <td th:text="${center.contactNumber}"></td>
+                        <td th:text="${center.capacityPerDay}"></td>
+                        <td th:text="${center.operatingHours}"></td>
+                        <td>
+                            <span class="badge badge-status"
+                                  th:classappend="${center.status == 'ACTIVE'} ? 'bg-success' : 'bg-secondary'"
+                                  th:text="${center.status}"></span>
+                        </td>
+                        <td class="text-end">
+                            <a th:href="@{/centers/edit/{id}(id=${center.id})}"
+                               class="btn btn-sm btn-outline-secondary icon-btn">
+                                <i data-lucide="pencil"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger icon-btn"
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    th:attr="data-delete-url=@{/centers/delete/{id}(id=${center.id})},data-item-name=${center.centerName}">
+                                <i data-lucide="trash-2"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(centers)}">
+                        <td colspan="8" class="text-center text-muted py-4">No vaccination centers found.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: deleteModal}"></div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
