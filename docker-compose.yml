@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: vaccination-portal-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vaccination_portal
+    ports:
+      - "3307:3306"
+    volumes:
+      - vaccination_portal_data:/var/lib/mysql
+
+volumes:
+  vaccination_portal_data:
