@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('Welcome')}"></head>
+<body class="landing-body">
+
+<header class="landing-topbar">
+    <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
+        <a class="navbar-brand" href="/">
+            <span class="brand-icon"><i data-lucide="syringe"></i></span>
+            <span>OpenVaccine</span>
+        </a>
+        <nav class="landing-topnav d-none d-md-flex">
+            <a href="#modules">Modules</a>
+            <a href="#about">About</a>
+        </nav>
+        <a href="/dashboard" class="btn btn-primary btn-sm icon-btn">
+            <i data-lucide="log-in"></i> Access Portal
+        </a>
+    </div>
+</header>
+
+<section class="landing-hero">
+    <div class="container">
+        <span class="landing-badge">Open source friendly &middot; Built for institutions</span>
+        <h1 class="landing-title">Vaccination program management, in one open system.</h1>
+        <p class="landing-subtitle">
+            OpenVaccine is a self-hosted portal for hospitals, clinics and health authorities to manage
+            vaccine inventory, appointments, dose records, facilities and adverse reaction reporting.
+        </p>
+        <div class="landing-actions">
+            <a href="/dashboard" class="btn btn-primary icon-btn">
+                <i data-lucide="arrow-right"></i> Access Portal
+            </a>
+            <a href="#modules" class="btn btn-outline-secondary icon-btn">
+                <i data-lucide="layout-grid"></i> View Modules
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="landing-stats">
+    <div class="container">
+        <div class="stats-row">
+            <div class="stat-item">
+                <span class="stat-number">6</span>
+                <span class="stat-label">Core modules</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Self-hosted</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">MySQL</span>
+                <span class="stat-label">Open data layer</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="landing-features" id="modules">
+    <div class="container">
+        <div class="landing-section-heading">
+            <h2>Modules</h2>
+            <p class="text-muted">Every part of a vaccination program, covered end to end.</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-item">
+                    <div class="icon-wrap">
+                        <i data-lucide="package"></i>
+                    </div>
+                    <h5>Vaccine Stock &amp; Inventory</h5>
+                    <p class="text-muted mb-0">Track vaccine batches, quantities and expiry dates.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-item">
+                    <div class="icon-wrap">
+                        <i data-lucide="calendar-clock"></i>
+                    </div>
+                    <h5>Appointment &amp; Scheduling</h5>
+                    <p class="text-muted mb-0">Book and manage patient vaccination appointments.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-item">
+                    <div class="icon-wrap">
+                        <i data-lucide="clipboard-check"></i>
+                    </div>
+                    <h5>Dose Logs &amp; Certificates</h5>
+                    <p class="text-muted mb-0">Record administered doses and issue certificates.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-item">
+                    <div class="icon-wrap">
+                        <i data-lucide="hospital"></i>
+                    </div>
+                    <h5>Vaccination Centers</h5>
+                    <p class="text-muted mb-0">Manage vaccination center and facility details.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-item">
+                    <div class="icon-wrap">
+                        <i data-lucide="triangle-alert"></i>
+                    </div>
+                    <h5>Adverse Reaction Monitoring</h5>
+                    <p class="text-muted mb-0">Log and monitor post-vaccination incidents.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-item">
+                    <div class="icon-wrap">
+                        <i data-lucide="chart-column"></i>
+                    </div>
+                    <h5>Reporting &amp; Analytics</h5>
+                    <p class="text-muted mb-0">Generate and review vaccination program reports.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="landing-about" id="about">
+    <div class="container">
+        <div class="about-box">
+            <div class="icon-wrap">
+                <i data-lucide="git-branch"></i>
+            </div>
+            <div>
+                <h5>Built to be adopted, not just demoed</h5>
+                <p class="text-muted mb-0">
+                    OpenVaccine keeps every module in a consistent, predictable structure, so any team or
+                    institution can read the code, extend a module, or run it on their own infrastructure.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="landing-footer">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <span class="text-muted">OpenVaccine. A Web Based Vaccination Portal.</span>
+        <span class="text-muted">SE2030 Software Engineering Project</span>
+    </div>
+</footer>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

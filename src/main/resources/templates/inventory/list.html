@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('Vaccine Inventory')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('inventory')}"></nav>
+
+<div class="container my-4">
+    <div class="page-header">
+        <h1><i data-lucide="package"></i> Vaccine Stock &amp; Inventory</h1>
+        <a href="/inventory/new" class="btn btn-primary icon-btn">
+            <i data-lucide="plus"></i> Add Stock
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>Vaccine Name</th>
+                        <th>Batch No.</th>
+                        <th>Manufacturer</th>
+                        <th>Quantity</th>
+                        <th>Received</th>
+                        <th>Expiry</th>
+                        <th>Storage Location</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="stock : ${stocks}">
+                        <td th:text="${stock.vaccineName}"></td>
+                        <td th:text="${stock.batchNumber}"></td>
+                        <td th:text="${stock.manufacturer}"></td>
+                        <td th:text="${stock.quantityAvailable}"></td>
+                        <td th:text="${stock.receivedDate}"></td>
+                        <td th:text="${stock.expiryDate}"></td>
+                        <td th:text="${stock.storageLocation}"></td>
+                        <td class="text-end">
+                            <a th:href="@{/inventory/edit/{id}(id=${stock.id})}"
+                               class="btn btn-sm btn-outline-secondary icon-btn">
+                                <i data-lucide="pencil"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger icon-btn"
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    th:attr="data-delete-url=@{/inventory/delete/{id}(id=${stock.id})},data-item-name=${stock.vaccineName}">
+                                <i data-lucide="trash-2"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(stocks)}">
+                        <td colspan="8" class="text-center text-muted py-4">No vaccine stock records found.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: deleteModal}"></div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

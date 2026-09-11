@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('dashboard')}"></nav>
+
+<div class="container my-4">
+    <div class="page-header">
+        <h1><i data-lucide="layout-dashboard"></i> Welcome to the Web-Based Vaccination Portal</h1>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <a href="/inventory" class="dashboard-card card h-100">
+                <div class="card-body">
+                    <div class="icon-wrap" style="background-color:#e0edff;">
+                        <i data-lucide="package" style="color:#0b5ed7;"></i>
+                    </div>
+                    <h5 class="card-title">Vaccine Stock &amp; Inventory</h5>
+                    <p class="card-text text-muted mb-0">Track vaccine batches, quantities and expiry dates.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="/appointments" class="dashboard-card card h-100">
+                <div class="card-body">
+                    <div class="icon-wrap" style="background-color:#e6f7ee;">
+                        <i data-lucide="calendar-clock" style="color:#198754;"></i>
+                    </div>
+                    <h5 class="card-title">Appointment &amp; Scheduling</h5>
+                    <p class="card-text text-muted mb-0">Book and manage patient vaccination appointments.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="/dose-records" class="dashboard-card card h-100">
+                <div class="card-body">
+                    <div class="icon-wrap" style="background-color:#fef3e6;">
+                        <i data-lucide="clipboard-check" style="color:#fd7e14;"></i>
+                    </div>
+                    <h5 class="card-title">Dose Logs &amp; Certificates</h5>
+                    <p class="card-text text-muted mb-0">Record administered doses and issue certificates.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="/centers" class="dashboard-card card h-100">
+                <div class="card-body">
+                    <div class="icon-wrap" style="background-color:#f1e9ff;">
+                        <i data-lucide="hospital" style="color:#6f42c1;"></i>
+                    </div>
+                    <h5 class="card-title">Vaccination Centers</h5>
+                    <p class="card-text text-muted mb-0">Manage vaccination center and facility details.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="/adverse-reactions" class="dashboard-card card h-100">
+                <div class="card-body">
+                    <div class="icon-wrap" style="background-color:#fde8e8;">
+                        <i data-lucide="triangle-alert" style="color:#dc3545;"></i>
+                    </div>
+                    <h5 class="card-title">Adverse Reaction Monitoring</h5>
+                    <p class="card-text text-muted mb-0">Log and monitor post-vaccination incidents.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="/reports" class="dashboard-card card h-100">
+                <div class="card-body">
+                    <div class="icon-wrap" style="background-color:#e6f4f9;">
+                        <i data-lucide="chart-column" style="color:#0dcaf0;"></i>
+                    </div>
+                    <h5 class="card-title">Reporting &amp; Analytics</h5>
+                    <p class="card-text text-muted mb-0">Generate and review vaccination program reports.</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

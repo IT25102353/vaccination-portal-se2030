@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/layout :: pageHead('Sign In')}"></head>
+  <body class="landing-body">
+    <header class="landing-topbar">
+      <div
+        class="container-fluid px-4 d-flex align-items-center justify-content-between"
+      >
+        <a class="navbar-brand" href="/">
+          <span class="brand-icon"><i data-lucide="syringe"></i></span>
+          <span>OpenVaccine</span>
+        </a>
+      </div>
+    </header>
+
+    <section class="login-section">
+      <div class="login-card">
+        <div class="login-card-header">
+          <span class="brand-icon"><i data-lucide="lock"></i></span>
+          <h1>Sign in</h1>
+          <p class="text-muted mb-0">Access the OpenVaccine portal</p>
+        </div>
+
+        <div
+          th:if="${errorMessage}"
+          class="alert alert-danger"
+          th:text="${errorMessage}"
+        ></div>
+
+        <form th:action="@{/login}" method="post">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control"
+              required
+              autofocus
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input
+              type="password"
+              name="password"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-100 icon-btn">
+            <i data-lucide="log-in"></i> Sign in
+          </button>
+        </form>
+
+        <p class="login-hint">
+          Demo credentials: <code>admin</code> / <code>admin123</code>
+        </p>
+      </div>
+    </section>
+
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+  </body>
+</html>

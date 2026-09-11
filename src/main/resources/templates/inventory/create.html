@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('Add Vaccine Stock')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('inventory')}"></nav>
+
+<div class="container my-4">
+    <div class="page-header">
+        <h1><i data-lucide="package-plus"></i> Add Vaccine Stock</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/inventory/save}" th:object="${stock}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Vaccine Name</label>
+                        <input type="text" class="form-control" th:field="*{vaccineName}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Batch Number</label>
+                        <input type="text" class="form-control" th:field="*{batchNumber}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Manufacturer</label>
+                        <input type="text" class="form-control" th:field="*{manufacturer}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Quantity Available</label>
+                        <input type="number" min="0" class="form-control" th:field="*{quantityAvailable}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Received Date</label>
+                        <input type="date" class="form-control" th:field="*{receivedDate}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="date" class="form-control" th:field="*{expiryDate}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Storage Location</label>
+                        <input type="text" class="form-control" th:field="*{storageLocation}" required>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary icon-btn">
+                        <i data-lucide="save"></i> Save
+                    </button>
+                    <a href="/inventory" class="btn btn-outline-secondary icon-btn">
+                        <i data-lucide="x"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
