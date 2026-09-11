@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('Edit Adverse Reaction')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('adverse-reactions')}"></nav>
+
+<div class="container my-4">
+    <div class="page-header">
+        <h1><i data-lucide="file-warning"></i> Edit Adverse Reaction</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/adverse-reactions/update/{id}(id=${adverseReaction.id})}" th:object="${adverseReaction}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Patient NIC</label>
+                        <select class="form-select" id="patientNicSelect" th:field="*{patientNic}" required>
+                            <option value="" disabled>Select a patient</option>
+                            <option th:each="p : ${patients}" th:value="${p.patientNic}" th:attr="data-name=${p.patientName}"
+                                    th:text="${p.patientName} + ' (' + ${p.patientNic} + ')'"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" id="patientNameInput" th:field="*{patientName}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Vaccine Name</label>
+                        <select class="form-select" th:field="*{vaccineName}" required>
+                            <option value="" disabled>Select a vaccine</option>
+                            <option th:each="name : ${vaccineNames}" th:value="${name}" th:text="${name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Center Name</label>
+                        <select class="form-select" th:field="*{centerName}" required>
+                            <option value="" disabled>Select a center</option>
+                            <option th:each="name : ${centerNames}" th:value="${name}" th:text="${name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Reaction Description</label>
+                        <textarea class="form-control" th:field="*{reactionDescription}" rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Severity</label>
+                        <select class="form-select" th:field="*{severity}" required>
+                            <option value="" disabled>Select severity</option>
+                            <option value="MILD">MILD</option>
+                            <option value="MODERATE">MODERATE</option>
+                            <option value="SEVERE">SEVERE</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Reported Date</label>
+                        <input type="date" class="form-control" th:field="*{reportedDate}" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Action Taken</label>
+                        <input type="text" class="form-control" th:field="*{actionTaken}">
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary icon-btn">
+                        <i data-lucide="save"></i> Update
+                    </button>
+                    <a href="/adverse-reactions" class="btn btn-outline-secondary icon-btn">
+                        <i data-lucide="x"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
