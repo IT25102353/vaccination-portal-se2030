@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('Appointments')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('appointments')}"></nav>
+
+<div class="container my-4">
+    <div class="page-header">
+        <h1><i data-lucide="calendar-clock"></i> Vaccine Appointment &amp; Scheduling</h1>
+        <a href="/appointments/new" class="btn btn-primary icon-btn">
+            <i data-lucide="plus"></i> New Appointment
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>NIC</th>
+                        <th>Contact</th>
+                        <th>Vaccine</th>
+                        <th>Center</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="appointment : ${appointments}">
+                        <td th:text="${appointment.patientName}"></td>
+                        <td th:text="${appointment.patientNic}"></td>
+                        <td th:text="${appointment.contactNumber}"></td>
+                        <td th:text="${appointment.vaccineName}"></td>
+                        <td th:text="${appointment.centerName}"></td>
+                        <td th:text="${appointment.appointmentDate}"></td>
+                        <td th:text="${appointment.appointmentTime}"></td>
+                        <td>
+                            <span class="badge badge-status"
+                                  th:classappend="${appointment.status == 'COMPLETED'} ? 'bg-success' : (${appointment.status == 'CANCELLED'} ? 'bg-danger' : 'bg-primary')"
+                                  th:text="${appointment.status}"></span>
+                        </td>
+                        <td class="text-end">
+                            <a th:href="@{/appointments/edit/{id}(id=${appointment.id})}"
+                               class="btn btn-sm btn-outline-secondary icon-btn">
+                                <i data-lucide="pencil"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger icon-btn"
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    th:attr="data-delete-url=@{/appointments/delete/{id}(id=${appointment.id})},data-item-name=${appointment.patientName}">
+                                <i data-lucide="trash-2"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(appointments)}">
+                        <td colspan="9" class="text-center text-muted py-4">No appointments found.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: deleteModal}"></div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

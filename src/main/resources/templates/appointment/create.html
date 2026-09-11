@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: pageHead('New Appointment')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('appointments')}"></nav>
+
+<div class="container my-4">
+    <div class="page-header">
+        <h1><i data-lucide="calendar-plus"></i> New Appointment</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/appointments/save}" th:object="${appointment}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" th:field="*{patientName}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Patient NIC</label>
+                        <input type="text" class="form-control" th:field="*{patientNic}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" th:field="*{contactNumber}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Vaccine Name</label>
+                        <select class="form-select" th:field="*{vaccineName}" required>
+                            <option value="" disabled selected>Select a vaccine</option>
+                            <option th:each="name : ${vaccineNames}" th:value="${name}" th:text="${name}"></option>
+                        </select>
+                        <div th:if="${#lists.isEmpty(vaccineNames)}" class="form-text text-danger">
+                            No vaccines found. Add one under Inventory first.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Vaccination Center</label>
+                        <select class="form-select" th:field="*{centerName}" required>
+                            <option value="" disabled selected>Select a center</option>
+                            <option th:each="name : ${centerNames}" th:value="${name}" th:text="${name}"></option>
+                        </select>
+                        <div th:if="${#lists.isEmpty(centerNames)}" class="form-text text-danger">
+                            No centers found. Add one under Centers first.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" th:field="*{status}" required>
+                            <option value="SCHEDULED">Scheduled</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Appointment Date</label>
+                        <input type="date" class="form-control" th:field="*{appointmentDate}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Appointment Time</label>
+                        <input type="time" class="form-control" th:field="*{appointmentTime}" required>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary icon-btn">
+                        <i data-lucide="save"></i> Save
+                    </button>
+                    <a href="/appointments" class="btn btn-outline-secondary icon-btn">
+                        <i data-lucide="x"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
