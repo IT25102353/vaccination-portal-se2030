@@ -4,7 +4,7 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar('reports')}"></nav>
 
-<div class="container my-4">
+<main class="container">
     <div class="page-header">
         <h1><i data-lucide="chart-column"></i> Reporting &amp; Analytics Management</h1>
         <a href="/reports/new" class="btn btn-primary icon-btn">
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <div th:replace="~{fragments/layout :: deleteModal}"></div>
 

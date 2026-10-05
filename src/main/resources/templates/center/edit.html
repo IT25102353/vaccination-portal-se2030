@@ -4,7 +4,7 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar('centers')}"></nav>
 
-<div class="container my-4">
+<main class="container">
     <div class="page-header">
         <h1><i data-lucide="hospital"></i> Edit Vaccination Center</h1>
     </div>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Contact Number</label>
-                        <input type="text" class="form-control" th:field="*{contactNumber}" required>
+                        <input type="text" class="form-control" th:field="*{contactNumber}" pattern="[0-9]{10}" maxlength="10" title="Contact number must have exactly 10 digits" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Capacity Per Day</label>
@@ -60,7 +60,7 @@
             </form>
         </div>
     </div>
-</div>
+</main>
 
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>

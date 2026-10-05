@@ -1,6 +1,8 @@
 package com.se2030.vaccination_portal.service;
 
 import com.se2030.vaccination_portal.model.Appointment;
+import com.se2030.vaccination_portal.pattern.strategy.ContactNumberRule;
+import com.se2030.vaccination_portal.pattern.strategy.ValidationStrategy;
 import com.se2030.vaccination_portal.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,9 @@ import java.util.Map;
 
 @Service
 public class AppointmentService {
+
+    // Strategy pattern: the contact number rule is a separate strategy object
+    private final ValidationStrategy<String> contactNumberRule = new ContactNumberRule();
 
     private final AppointmentRepository appointmentRepository;
 
@@ -36,6 +41,7 @@ public class AppointmentService {
     }
 
     public Appointment createAppointment(Appointment appointment) {
+        contactNumberRule.validate(appointment.getContactNumber());
         if (appointment.getPatientName() == null || appointment.getPatientName().isBlank()) {
             throw new IllegalArgumentException("Patient name is required");
         }
@@ -46,6 +52,7 @@ public class AppointmentService {
     }
 
     public Appointment updateAppointment(Long id, Appointment updatedAppointment) {
+        contactNumberRule.validate(updatedAppointment.getContactNumber());
         Appointment existingAppointment = getAppointmentById(id);
         if (updatedAppointment.getPatientName() == null || updatedAppointment.getPatientName().isBlank()) {
             throw new IllegalArgumentException("Patient name is required");

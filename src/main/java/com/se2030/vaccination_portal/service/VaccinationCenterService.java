@@ -1,6 +1,8 @@
 package com.se2030.vaccination_portal.service;
 
 import com.se2030.vaccination_portal.model.VaccinationCenter;
+import com.se2030.vaccination_portal.pattern.strategy.ContactNumberRule;
+import com.se2030.vaccination_portal.pattern.strategy.ValidationStrategy;
 import com.se2030.vaccination_portal.repository.VaccinationCenterRepository;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,9 @@ import java.util.List;
 
 @Service
 public class VaccinationCenterService {
+
+    // Strategy pattern: the contact number rule is a separate strategy object
+    private final ValidationStrategy<String> contactNumberRule = new ContactNumberRule();
 
     private final VaccinationCenterRepository vaccinationCenterRepository;
 
@@ -33,6 +38,7 @@ public class VaccinationCenterService {
     }
 
     public VaccinationCenter createCenter(VaccinationCenter center) {
+        contactNumberRule.validate(center.getContactNumber());
         if (center.getCenterName() == null || center.getCenterName().isBlank()) {
             throw new IllegalArgumentException("Center name is required");
         }
@@ -43,6 +49,7 @@ public class VaccinationCenterService {
     }
 
     public VaccinationCenter updateCenter(Long id, VaccinationCenter updatedCenter) {
+        contactNumberRule.validate(updatedCenter.getContactNumber());
         VaccinationCenter existingCenter = getCenterById(id);
         if (updatedCenter.getCenterName() == null || updatedCenter.getCenterName().isBlank()) {
             throw new IllegalArgumentException("Center name is required");

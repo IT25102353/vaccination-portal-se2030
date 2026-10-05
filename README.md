@@ -1,182 +1,109 @@
-## OpenVaccine Vaccination Portal
+# OpenVaccine
 
-A web-based vaccination management system developed for the **SE2030 Software Engineering** group assignment in the **second year, first semester**.
+A web portal for managing a vaccination programme: vaccine stock, appointments, dose records, centers, adverse reactions and reports. Built as a first-year SE2030 project to practise object-oriented design.
 
-OpenVaccine supports the management of vaccination centers, vaccine inventory, appointments, dose administration, vaccination certificates, adverse reactions, and reports through a single portal.
+[Tech Stack](#tech-stack) · [Features](#features) · [Design Patterns](#design-patterns) · [Run It](#run-it)
 
-## Project Overview
+## Tech Stack
 
-The system is designed to support the main operational activities of a vaccination program:
-
-- Manage vaccine stock, batches, expiry dates, quantities, and storage locations.
-- Register and manage vaccination centers and their facilities.
-- Schedule and maintain patient vaccination appointments.
-- Record administered doses and certificate information.
-- Monitor and manage adverse reactions after vaccination.
-- Produce vaccination-related reports and analytics.
-- Protect authenticated application areas through login session handling.
-
-## Technology Stack
-
-- **Language:** Java 21
-- **Framework:** Spring Boot 4.1.0
-- **Web layer:** Spring MVC and Thymeleaf
-- **Persistence:** Spring Data JPA and Hibernate
-- **Database:** MySQL 8.4
-- **Build tool:** Maven Wrapper
-- **Development environment:** Docker Compose
-- **Frontend:** HTML, CSS, and Thymeleaf templates
-
-## Project Structure
-
-```text
-src/
-├── main/
-│   ├── java/com/se2030/vaccination_portal/
-│   │   ├── config/          # Login and web configuration
-│   │   ├── controller/      # HTTP request handling
-│   │   ├── model/           # JPA domain models
-│   │   └── service/         # Application and business logic
-│   └── resources/
-│       ├── static/css/      # Stylesheets
-│       ├── templates/       # Thymeleaf views
-│       └── application.properties
-└── test/
-    └── java/                # Automated tests
-```
-
-## Main Modules
-
-| Module | Purpose |
+| Part | Technology |
 |---|---|
-| Vaccine Stock and Inventory | Maintains vaccine names, batches, manufacturers, quantities, dates, and storage locations. |
-| Vaccination Center and Facility Management | Maintains vaccination center details, capacity, operating hours, contact information, and status. |
-| Vaccine Appointment and Scheduling | Registers patients and manages appointment dates, times, vaccine selections, centers, and appointment status. |
-| Dose Administration Logs and Certification | Records administered doses and generates or stores vaccination certificate information. |
-| Adverse Reaction Monitoring and Incident Management | Records post-vaccination reactions, severity, reporting dates, descriptions, and actions taken. |
-| Reporting and Analytics Management | Provides vaccination-related reports and analytical information for operational review. |
+| Language | Java 21 |
+| Framework | Spring Boot |
+| Pages | Thymeleaf templates, Bootstrap 5 |
+| Database | MySQL (runs in Docker) |
+| Build tool | Maven |
+| Tests | JUnit 5, Mockito |
 
-## Requirements
+The code is split into layers: **model** (the data), **repository** (database access), **service** (the rules) and **controller** (web pages).
 
-Install the following before running the application:
+## Features
 
-- Java Development Kit (JDK) 21 or later
-- Docker Desktop or Docker Engine with Docker Compose
-- Git
+- **Inventory:** track vaccine batches, quantities and expiry dates. A Status column shows `VALID`, `EXPIRING SOON` or `EXPIRED` automatically.
+- **Appointments:** book and manage patient appointments.
+- **Dose Records:** record administered doses and certificate numbers.
+- **Centers:** manage vaccination centers and their daily capacity.
+- **Adverse Reactions:** log and follow up on reactions after vaccination.
+- **Reports:** create reports. Leave the summary empty and it is written for you from real data.
+- **Dashboard:** live totals and a list of stock that is expired or expiring soon.
+- **Input checks:**
+  - Names, batch numbers and locations allow only letters and numbers.
+  - The received date must be before the expiry date.
+  - Contact numbers must be exactly 10 digits.
+- **Interface:** search on every list, success messages that disappear after a few seconds, and a light/dark theme switch.
 
-Verify the installations:
+## Design Patterns
 
-```bash
-java -version
-./mvnw -version
-docker compose version
+All pattern code is in `src/main/java/com/se2030/vaccination_portal/pattern/`.
+
+### 1. Strategy (`pattern/strategy`)
+
+**Problem it solves:** the same validation `if` statements and regexes were copied into several services. A change meant editing many places.
+
+**Before:**
+```java
+if (!stock.getBatchNumber().matches("[A-Za-z0-9 ]+")) { throw ... }
+if (!stock.getManufacturer().matches("[A-Za-z0-9 ]+")) { throw ... }
+if (!stock.getStorageLocation().matches("[A-Za-z0-9 ]+")) { throw ... }
 ```
 
-On Windows, use `mvnw.cmd` instead of `./mvnw`.
+**After:** each rule is one small class, and the service just uses it.
+```java
+private final ValidationStrategy<String> batchNumberRule = new AlphanumericRule("Batch number");
 
-## Setup and Installation
+batchNumberRule.validate(stock.getBatchNumber());   // throws "Batch number can only contain letters and numbers"
+```
 
-1. Clone the repository and enter the project directory.
+**Result:** a rule is written once and reused. A new rule is a new class, and no service needs to change. The expiry status works the same way: `WarningWindowExpiryStatus(30)` can be swapped for `WarningWindowExpiryStatus(60)` without touching `VaccineStock`.
 
-   ```bash
-   git clone <repository-url>
-   cd vaccination-portal-mem1
-   ```
+### 2. Observer (`pattern/observer`)
 
-2. Start the MySQL database container.
+**Problem it solves:** recording a dose should also reduce stock and write an audit log. Putting all that inside `DoseRecordService` would mix the Dose Records and Inventory modules together.
 
-   ```bash
-   docker compose up -d
-   ```
+**How it works:** the service only announces "a dose was recorded". Observers listen and each does its own job.
+```java
+DoseRecord saved = doseRecordRepository.save(doseRecord);
+for (Observer<DoseRecord> observer : observers) {
+    observer.update(saved);
+}
+```
 
-   The database is available on port `3307` and uses the database name `vaccination_portal` for local development.
-
-3. Start the Spring Boot application.
-
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-4. Open the application in a browser:
-
-   ```text
-   http://localhost:8080
-   ```
-
-The application uses Hibernate's `update` mode, so the required tables are created or updated automatically when the application connects to the database.
-
-## Default Local Database Configuration
-
-The current development configuration uses the following local values:
-
-| Setting | Value |
+**Showcase:** record one Covishield dose.
+| Step | Who does it |
 |---|---|
-| Database host | `localhost` |
-| Database port | `3307` |
-| Database name | `vaccination_portal` |
-| Database username | `root` |
-| Database password | `root` |
+| Dose is saved | `DoseRecordService` |
+| Covishield stock goes from 500 to 499 | `StockDeductionObserver` |
+| `Dose recorded: Covishield (dose 1) for Kasun Perera` appears in the log | `DoseAuditObserver` |
 
-These values are intended for local development only. Use environment variables or a secrets manager for production deployments.
+**Result:** to add another reaction (for example an email), write a new observer class. `DoseRecordService` stays the same. Reporting a `SEVERE` adverse reaction works the same way through `SevereReactionAlertObserver`.
 
-## Application Access
+### 3. Factory Method (`pattern/factory`)
 
-The protected modules require a logged-in session. For the local demonstration setup, use the demo account configured by the project:
+**Problem it solves:** report summaries were typed by hand, and `ReportService` would need a long `if / else` to build a different summary for each report type.
 
-- Username: `admin`
-- Password: `admin123`
-
-After signing in, the dashboard provides access to the application modules. Log out when finished using the portal.
-
-## Recommended Testing Order
-
-Some records depend on data created in earlier modules. For the smoothest demonstration, use this order:
-
-1. Sign in.
-2. Create vaccine inventory records.
-3. Create vaccination centers.
-4. Create patient appointments.
-5. Create dose administration records.
-6. Record adverse reactions.
-7. Review reports and analytics.
-
-Detailed sample data and end-to-end testing steps are available in [TRY_OUT.md](TRY_OUT.md).
-
-## Running Tests
-
-Run the test suite with the Maven Wrapper:
-
-```bash
-./mvnw test
+**How it works:** `ReportService` asks the factory for a generator and does not care which one it gets.
+```java
+ReportGenerator generator = reportGeneratorFactory.createGenerator(report.getReportType());
+report.setSummary(generator.generateSummary(report.getPeriodStart(), report.getPeriodEnd()));
 ```
 
-## Stopping the Database
-
-Stop the MySQL container with:
-
-```bash
-docker compose down
-```
-
-To remove the database container and its persistent local data as well:
-
-```bash
-docker compose down -v
-```
-
-## Team Responsibilities
-
-The following responsibility areas are assigned to the SE2030 group members. Student IDs are included for identification; personal email addresses and passwords are intentionally omitted.
-
-| Student ID | Responsibility |
+**Showcase:** create a report with the Summary box left empty.
+| Report type | Generated summary |
 |---|---|
-| IT25100152 | Dose Administration Logs and Certification System |
-| IT25102368 | Vaccination Center and Facility Management |
-| IT25100136 | Vaccine Appointment and Scheduling System |
-| IT25102367 | Reporting and Analytics Management |
-| IT25100125 | Adverse Reaction Monitoring and Incident Management |
-| IT25102353 | Vaccine Stock and Inventory Management |
+| `INVENTORY` | Inventory: 2 batches, 800 doses in stock. 0 expired, 1 expiring soon. |
+| `APPOINTMENTS` | Appointments from 2026-08-10 to 2026-08-16: 2 in total, 1 completed, 0 cancelled. |
+| `ADVERSE_REACTIONS` | Adverse reactions from 2026-08-10 to 2026-08-16: 1 reported, 0 severe. |
+| `GENERAL` | General: 2 doses administered from 2026-08-10 to 2026-08-16 across 2 registered centers. |
 
-## Academic Context
+**Result:** a new report type is a new generator class plus one line in the factory. `ReportService` stays the same.
 
-This project was developed as a group assignment for the **SE2030 Software Engineering** module during the **second year, first semester**.
+## Run It
+
+```
+docker compose up -d
+./mvnw spring-boot:run
+```
+
+Open http://localhost:8080 and sign in with `admin` / `admin123`.
+
+Run the tests with `./mvnw test`. A step-by-step walkthrough of every module is in [TRY_OUT.md](TRY_OUT.md).

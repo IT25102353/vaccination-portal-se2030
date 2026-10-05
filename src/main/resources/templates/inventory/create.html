@@ -4,7 +4,7 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar('inventory')}"></nav>
 
-<div class="container my-4">
+<main class="container">
     <div class="page-header">
         <h1><i data-lucide="package-plus"></i> Add Vaccine Stock</h1>
     </div>
@@ -15,15 +15,15 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Vaccine Name</label>
-                        <input type="text" class="form-control" th:field="*{vaccineName}" required>
+                        <input type="text" class="form-control" th:field="*{vaccineName}" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers are allowed" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Batch Number</label>
-                        <input type="text" class="form-control" th:field="*{batchNumber}" required>
+                        <input type="text" class="form-control" th:field="*{batchNumber}" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Manufacturer</label>
-                        <input type="text" class="form-control" th:field="*{manufacturer}" required>
+                        <input type="text" class="form-control" th:field="*{manufacturer}" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers are allowed" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Quantity Available</label>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Storage Location</label>
-                        <input type="text" class="form-control" th:field="*{storageLocation}" required>
+                        <input type="text" class="form-control" th:field="*{storageLocation}" pattern="[A-Za-z0-9 ]+" title="Only letters and numbers are allowed" required>
                     </div>
                 </div>
 
@@ -54,7 +54,7 @@
             </form>
         </div>
     </div>
-</div>
+</main>
 
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>

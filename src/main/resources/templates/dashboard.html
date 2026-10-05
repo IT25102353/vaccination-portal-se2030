@@ -4,80 +4,83 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar('dashboard')}"></nav>
 
-<div class="container my-4">
+<main class="container">
     <div class="page-header">
-        <h1><i data-lucide="layout-dashboard"></i> Welcome to the Web-Based Vaccination Portal</h1>
+        <div>
+            <h1>Dashboard</h1>
+            <p class="page-sub">Overview of your vaccination programme today.</p>
+        </div>
+        <a href="/appointments/new" class="btn btn-primary">New appointment</a>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
-            <a href="/inventory" class="dashboard-card card h-100">
-                <div class="card-body">
-                    <div class="icon-wrap" style="background-color:#e0edff;">
-                        <i data-lucide="package" style="color:#0b5ed7;"></i>
-                    </div>
-                    <h5 class="card-title">Vaccine Stock &amp; Inventory</h5>
-                    <p class="card-text text-muted mb-0">Track vaccine batches, quantities and expiry dates.</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <a href="/appointments" class="dashboard-card card h-100">
-                <div class="card-body">
-                    <div class="icon-wrap" style="background-color:#e6f7ee;">
-                        <i data-lucide="calendar-clock" style="color:#198754;"></i>
-                    </div>
-                    <h5 class="card-title">Appointment &amp; Scheduling</h5>
-                    <p class="card-text text-muted mb-0">Book and manage patient vaccination appointments.</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <a href="/dose-records" class="dashboard-card card h-100">
-                <div class="card-body">
-                    <div class="icon-wrap" style="background-color:#fef3e6;">
-                        <i data-lucide="clipboard-check" style="color:#fd7e14;"></i>
-                    </div>
-                    <h5 class="card-title">Dose Logs &amp; Certificates</h5>
-                    <p class="card-text text-muted mb-0">Record administered doses and issue certificates.</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <a href="/centers" class="dashboard-card card h-100">
-                <div class="card-body">
-                    <div class="icon-wrap" style="background-color:#f1e9ff;">
-                        <i data-lucide="hospital" style="color:#6f42c1;"></i>
-                    </div>
-                    <h5 class="card-title">Vaccination Centers</h5>
-                    <p class="card-text text-muted mb-0">Manage vaccination center and facility details.</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <a href="/adverse-reactions" class="dashboard-card card h-100">
-                <div class="card-body">
-                    <div class="icon-wrap" style="background-color:#fde8e8;">
-                        <i data-lucide="triangle-alert" style="color:#dc3545;"></i>
-                    </div>
-                    <h5 class="card-title">Adverse Reaction Monitoring</h5>
-                    <p class="card-text text-muted mb-0">Log and monitor post-vaccination incidents.</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <a href="/reports" class="dashboard-card card h-100">
-                <div class="card-body">
-                    <div class="icon-wrap" style="background-color:#e6f4f9;">
-                        <i data-lucide="chart-column" style="color:#0dcaf0;"></i>
-                    </div>
-                    <h5 class="card-title">Reporting &amp; Analytics</h5>
-                    <p class="card-text text-muted mb-0">Generate and review vaccination program reports.</p>
-                </div>
-            </a>
-        </div>
+    <div class="alert alert-warning attention-banner" th:if="${!#lists.isEmpty(needAttention)}">
+        <i data-lucide="triangle-alert"></i>
+        <span><strong th:text="${#lists.size(needAttention)}"></strong> stock batch(es) are expired or expiring within 30 days.
+            <a href="#attention">Review</a></span>
     </div>
-</div>
+
+    <section class="kpi-grid">
+        <a href="/inventory" class="kpi">
+            <span class="kpi-value" th:text="${totalUnits}">0</span>
+            <span class="kpi-label">Doses in stock (<span th:text="${batchCount}"></span> batches)</span>
+        </a>
+        <a href="/appointments" class="kpi">
+            <span class="kpi-value" th:text="${appointmentCount}">0</span>
+            <span class="kpi-label">Appointments</span>
+        </a>
+        <a href="/dose-records" class="kpi">
+            <span class="kpi-value" th:text="${doseCount}">0</span>
+            <span class="kpi-label">Doses administered</span>
+        </a>
+        <a href="/adverse-reactions" class="kpi">
+            <span class="kpi-value" th:text="${reactionCount}">0</span>
+            <span class="kpi-label">Adverse reactions</span>
+        </a>
+    </section>
+
+    <div class="dash-columns">
+        <section class="card" id="attention">
+            <div class="card-head">
+                <h2>Stock needing attention</h2>
+                <a href="/inventory" class="link-quiet">View inventory</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead><tr><th>Vaccine</th><th>Batch</th><th>Expiry</th><th>Status</th></tr></thead>
+                    <tbody>
+                    <tr th:each="stock : ${needAttention}">
+                        <td th:text="${stock.vaccineName}"></td>
+                        <td th:text="${stock.batchNumber}"></td>
+                        <td th:text="${stock.expiryDate}"></td>
+                        <td>
+                            <span class="badge badge-status"
+                                  th:text="${stock.status}"
+                                  th:classappend="${stock.status == 'EXPIRED'} ? 'bg-danger' : 'bg-warning'"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(needAttention)}">
+                        <td colspan="4" class="empty-row">
+                            All stock is in date. Nothing to action.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-head"><h2>Modules</h2></div>
+            <nav class="module-list">
+                <a href="/inventory"><span>Stock &amp; Inventory</span></a>
+                <a href="/appointments"><span>Appointments</span></a>
+                <a href="/dose-records"><span>Dose Records</span></a>
+                <a href="/centers"><span>Centers <small th:text="${centerCount}"></small></span></a>
+                <a href="/adverse-reactions"><span>Adverse Reactions</span></a>
+                <a href="/reports"><span>Reports <small th:text="${reportCount}"></small></span></a>
+            </nav>
+        </section>
+    </div>
+</main>
 
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>

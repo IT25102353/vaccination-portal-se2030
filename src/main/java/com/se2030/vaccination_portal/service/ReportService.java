@@ -1,6 +1,8 @@
 package com.se2030.vaccination_portal.service;
 
 import com.se2030.vaccination_portal.model.Report;
+import com.se2030.vaccination_portal.pattern.factory.ReportGenerator;
+import com.se2030.vaccination_portal.pattern.factory.ReportGeneratorFactory;
 import com.se2030.vaccination_portal.repository.ReportRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +13,12 @@ public class ReportService {
 
     private final ReportRepository reportRepository;
 
-    public ReportService(ReportRepository reportRepository) {
+    // Factory Method pattern: the factory gives us the right generator for each report type
+    private final ReportGeneratorFactory reportGeneratorFactory;
+
+    public ReportService(ReportRepository reportRepository, ReportGeneratorFactory reportGeneratorFactory) {
         this.reportRepository = reportRepository;
+        this.reportGeneratorFactory = reportGeneratorFactory;
     }
 
     public List<Report> getAllReports() {
@@ -31,6 +37,7 @@ public class ReportService {
         if (report.getGeneratedDate() == null) {
             throw new IllegalArgumentException("Generated date is required");
         }
+        fillSummaryIfBlank(report);
         return reportRepository.save(report);
     }
 
@@ -48,6 +55,7 @@ public class ReportService {
         existingReport.setPeriodEnd(updatedReport.getPeriodEnd());
         existingReport.setGeneratedBy(updatedReport.getGeneratedBy());
         existingReport.setGeneratedDate(updatedReport.getGeneratedDate());
+        fillSummaryIfBlank(updatedReport);
         existingReport.setSummary(updatedReport.getSummary());
         return reportRepository.save(existingReport);
     }
@@ -55,5 +63,15 @@ public class ReportService {
     public void deleteReport(Long id) {
         Report report = getReportById(id);
         reportRepository.delete(report);
+    }
+
+    // If the user left the summary empty, generate it from the real data
+    private void fillSummaryIfBlank(Report report) {
+        boolean summaryEmpty = report.getSummary() == null || report.getSummary().isBlank();
+        if (summaryEmpty && report.getReportType() != null && !report.getReportType().isBlank()
+                && report.getPeriodStart() != null && report.getPeriodEnd() != null) {
+            ReportGenerator generator = reportGeneratorFactory.createGenerator(report.getReportType());
+            report.setSummary(generator.generateSummary(report.getPeriodStart(), report.getPeriodEnd()));
+        }
     }
 }

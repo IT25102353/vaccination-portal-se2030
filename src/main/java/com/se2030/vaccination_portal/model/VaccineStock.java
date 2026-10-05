@@ -4,11 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+import com.se2030.vaccination_portal.pattern.strategy.ExpiryStatusStrategy;
+import com.se2030.vaccination_portal.pattern.strategy.WarningWindowExpiryStatus;
 
 import java.time.LocalDate;
 
 @Entity
 public class VaccineStock {
+
+    private static final ExpiryStatusStrategy EXPIRY_STATUS = new WarningWindowExpiryStatus(30);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +39,12 @@ public class VaccineStock {
         this.receivedDate = receivedDate;
         this.expiryDate = expiryDate;
         this.storageLocation = storageLocation;
+    }
+
+    // The status is calculated by a Strategy and is not saved in the database
+    @Transient
+    public String getStatus() {
+        return EXPIRY_STATUS.calculateStatus(expiryDate, LocalDate.now());
     }
 
     public Long getId() {

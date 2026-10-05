@@ -4,7 +4,7 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar('inventory')}"></nav>
 
-<div class="container my-4">
+<main class="container">
     <div class="page-header">
         <h1><i data-lucide="package"></i> Vaccine Stock &amp; Inventory</h1>
         <a href="/inventory/new" class="btn btn-primary icon-btn">
@@ -28,6 +28,7 @@
                         <th>Received</th>
                         <th>Expiry</th>
                         <th>Storage Location</th>
+                        <th>Status</th>
                         <th class="text-end">Actions</th>
                     </tr>
                     </thead>
@@ -40,6 +41,11 @@
                         <td th:text="${stock.receivedDate}"></td>
                         <td th:text="${stock.expiryDate}"></td>
                         <td th:text="${stock.storageLocation}"></td>
+                        <td>
+                            <span class="badge badge-status"
+                                  th:text="${stock.status}"
+                                  th:classappend="${stock.status == 'VALID'} ? 'bg-success' : (${stock.status == 'EXPIRED'} ? 'bg-danger' : 'bg-warning')"></span>
+                        </td>
                         <td class="text-end">
                             <a th:href="@{/inventory/edit/{id}(id=${stock.id})}"
                                class="btn btn-sm btn-outline-secondary icon-btn">
@@ -53,14 +59,14 @@
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(stocks)}">
-                        <td colspan="8" class="text-center text-muted py-4">No vaccine stock records found.</td>
+                        <td colspan="9" class="text-center text-muted py-4">No vaccine stock records found.</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <div th:replace="~{fragments/layout :: deleteModal}"></div>
 

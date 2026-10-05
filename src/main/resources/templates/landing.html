@@ -4,7 +4,7 @@
 <body class="landing-body">
 
 <header class="landing-topbar">
-    <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
+    <div class="landing-wrap d-flex align-items-center justify-content-between">
         <a class="navbar-brand" href="/">
             <span class="brand-icon"><i data-lucide="syringe"></i></span>
             <span>OpenVaccine</span>
@@ -13,136 +13,51 @@
             <a href="#modules">Modules</a>
             <a href="#about">About</a>
         </nav>
-        <a href="/dashboard" class="btn btn-primary btn-sm icon-btn">
-            <i data-lucide="log-in"></i> Access Portal
-        </a>
+        <a href="/dashboard" class="btn btn-outline-secondary btn-sm">Sign in</a>
     </div>
 </header>
 
-<section class="landing-hero">
-    <div class="container">
-        <span class="landing-badge">Open source friendly &middot; Built for institutions</span>
-        <h1 class="landing-title">Vaccination program management, in one open system.</h1>
+<main>
+    <section class="landing-wrap landing-hero">
+        <h1 class="landing-title">Manage vaccine stock, appointments and dose records in one place.</h1>
         <p class="landing-subtitle">
-            OpenVaccine is a self-hosted portal for hospitals, clinics and health authorities to manage
-            vaccine inventory, appointments, dose records, facilities and adverse reaction reporting.
+            OpenVaccine is a web portal for a vaccination programme. Staff can track vaccine batches and expiry dates,
+            book appointments, record administered doses, manage centers and log adverse reactions.
         </p>
         <div class="landing-actions">
-            <a href="/dashboard" class="btn btn-primary icon-btn">
-                <i data-lucide="arrow-right"></i> Access Portal
-            </a>
-            <a href="#modules" class="btn btn-outline-secondary icon-btn">
-                <i data-lucide="layout-grid"></i> View Modules
-            </a>
+            <a href="/dashboard" class="btn btn-primary">Open the portal</a>
+            <a href="#modules" class="btn btn-outline-secondary">See what it covers</a>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="landing-stats">
-    <div class="container">
-        <div class="stats-row">
-            <div class="stat-item">
-                <span class="stat-number">6</span>
-                <span class="stat-label">Core modules</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">100%</span>
-                <span class="stat-label">Self-hosted</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">MySQL</span>
-                <span class="stat-label">Open data layer</span>
-            </div>
-        </div>
-    </div>
-</section>
+    <section class="landing-wrap landing-section" id="modules">
+        <h2>What it covers</h2>
+        <ul class="module-rows">
+            <li><a href="/inventory"><span class="name">Vaccine Stock &amp; Inventory</span><span class="desc">Batches, quantities, expiry dates and storage locations.</span><span class="go">Open</span></a></li>
+            <li><a href="/appointments"><span class="name">Appointments</span><span class="desc">Book and manage patient vaccination appointments.</span><span class="go">Open</span></a></li>
+            <li><a href="/dose-records"><span class="name">Dose Records</span><span class="desc">Record administered doses and certificate numbers.</span><span class="go">Open</span></a></li>
+            <li><a href="/centers"><span class="name">Vaccination Centers</span><span class="desc">Center details, contact numbers and daily capacity.</span><span class="go">Open</span></a></li>
+            <li><a href="/adverse-reactions"><span class="name">Adverse Reactions</span><span class="desc">Log and follow up on post-vaccination incidents.</span><span class="go">Open</span></a></li>
+            <li><a href="/reports"><span class="name">Reports</span><span class="desc">Summaries of programme activity over a chosen period.</span><span class="go">Open</span></a></li>
+        </ul>
+    </section>
 
-<section class="landing-features" id="modules">
-    <div class="container">
-        <div class="landing-section-heading">
-            <h2>Modules</h2>
-            <p class="text-muted">Every part of a vaccination program, covered end to end.</p>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <div class="icon-wrap">
-                        <i data-lucide="package"></i>
-                    </div>
-                    <h5>Vaccine Stock &amp; Inventory</h5>
-                    <p class="text-muted mb-0">Track vaccine batches, quantities and expiry dates.</p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <div class="icon-wrap">
-                        <i data-lucide="calendar-clock"></i>
-                    </div>
-                    <h5>Appointment &amp; Scheduling</h5>
-                    <p class="text-muted mb-0">Book and manage patient vaccination appointments.</p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <div class="icon-wrap">
-                        <i data-lucide="clipboard-check"></i>
-                    </div>
-                    <h5>Dose Logs &amp; Certificates</h5>
-                    <p class="text-muted mb-0">Record administered doses and issue certificates.</p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <div class="icon-wrap">
-                        <i data-lucide="hospital"></i>
-                    </div>
-                    <h5>Vaccination Centers</h5>
-                    <p class="text-muted mb-0">Manage vaccination center and facility details.</p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <div class="icon-wrap">
-                        <i data-lucide="triangle-alert"></i>
-                    </div>
-                    <h5>Adverse Reaction Monitoring</h5>
-                    <p class="text-muted mb-0">Log and monitor post-vaccination incidents.</p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-item">
-                    <div class="icon-wrap">
-                        <i data-lucide="chart-column"></i>
-                    </div>
-                    <h5>Reporting &amp; Analytics</h5>
-                    <p class="text-muted mb-0">Generate and review vaccination program reports.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="landing-about" id="about">
-    <div class="container">
-        <div class="about-box">
-            <div class="icon-wrap">
-                <i data-lucide="git-branch"></i>
-            </div>
-            <div>
-                <h5>Built to be adopted, not just demoed</h5>
-                <p class="text-muted mb-0">
-                    OpenVaccine keeps every module in a consistent, predictable structure, so any team or
-                    institution can read the code, extend a module, or run it on their own infrastructure.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
+    <section class="landing-wrap landing-section" id="about">
+        <h2>About this project</h2>
+        <p>
+            OpenVaccine is a first-year university project for SE2030, built to practise object-oriented design.
+            It is written in Java with Spring Boot and Thymeleaf and stores its data in MySQL.
+        </p>
+        <p>
+            Each module follows the same layers: a model class, a repository, a service and a controller.
+        </p>
+    </section>
+</main>
 
 <footer class="landing-footer">
-    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-2">
-        <span class="text-muted">OpenVaccine. A Web Based Vaccination Portal.</span>
-        <span class="text-muted">SE2030 Software Engineering Project</span>
+    <div class="landing-wrap d-flex flex-wrap justify-content-between gap-2">
+        <span>OpenVaccine</span>
+        <span>SE2030 Software Engineering Project</span>
     </div>
 </footer>
 

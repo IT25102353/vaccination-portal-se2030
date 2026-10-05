@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: pageHead('Edit Adverse Reaction')}"></head>
+<head th:replace="~{fragments/layout :: pageHead('Edit Dose Record')}"></head>
 <body>
-<nav th:replace="~{fragments/layout :: navbar('adverse-reactions')}"></nav>
+<nav th:replace="~{fragments/layout :: navbar('dose-records')}"></nav>
 
 <main class="container">
     <div class="page-header">
-        <h1><i data-lucide="file-warning"></i> Edit Adverse Reaction</h1>
+        <h1><i data-lucide="file-check"></i> Edit Dose Record</h1>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <form th:action="@{/adverse-reactions/update/{id}(id=${adverseReaction.id})}" th:object="${adverseReaction}" method="post">
+            <form th:action="@{/dose-records/update/{id}(id=${doseRecord.id})}" th:object="${doseRecord}" method="post">
                 <input type="hidden" th:field="*{id}">
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -34,32 +34,27 @@
                         </select>
                     </div>
                     <div class="col-md-6">
+                        <label class="form-label">Dose Number</label>
+                        <input type="number" min="1" class="form-control" th:field="*{doseNumber}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date Administered</label>
+                        <input type="date" class="form-control" th:field="*{dateAdministered}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Administered By</label>
+                        <input type="text" class="form-control" th:field="*{administeredBy}" required>
+                    </div>
+                    <div class="col-md-6">
                         <label class="form-label">Center Name</label>
                         <select class="form-select" th:field="*{centerName}" required>
                             <option value="" disabled>Select a center</option>
                             <option th:each="name : ${centerNames}" th:value="${name}" th:text="${name}"></option>
                         </select>
                     </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Reaction Description</label>
-                        <textarea class="form-control" th:field="*{reactionDescription}" rows="3" required></textarea>
-                    </div>
                     <div class="col-md-6">
-                        <label class="form-label">Severity</label>
-                        <select class="form-select" th:field="*{severity}" required>
-                            <option value="" disabled>Select severity</option>
-                            <option value="MILD">MILD</option>
-                            <option value="MODERATE">MODERATE</option>
-                            <option value="SEVERE">SEVERE</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Reported Date</label>
-                        <input type="date" class="form-control" th:field="*{reportedDate}" required>
-                    </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Action Taken</label>
-                        <input type="text" class="form-control" th:field="*{actionTaken}">
+                        <label class="form-label">Certificate Number</label>
+                        <input type="text" class="form-control" th:field="*{certificateNumber}" required>
                     </div>
                 </div>
 
@@ -67,7 +62,7 @@
                     <button type="submit" class="btn btn-primary icon-btn">
                         <i data-lucide="save"></i> Update
                     </button>
-                    <a href="/adverse-reactions" class="btn btn-outline-secondary icon-btn">
+                    <a href="/dose-records" class="btn btn-outline-secondary icon-btn">
                         <i data-lucide="x"></i> Cancel
                     </a>
                 </div>

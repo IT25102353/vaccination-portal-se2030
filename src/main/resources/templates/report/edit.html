@@ -4,7 +4,7 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar('reports')}"></nav>
 
-<div class="container my-4">
+<main class="container">
     <div class="page-header">
         <h1><i data-lucide="file-text"></i> Edit Report</h1>
     </div>
@@ -46,7 +46,8 @@
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Summary</label>
-                        <textarea class="form-control" th:field="*{summary}" rows="3"></textarea>
+                        <textarea class="form-control" th:field="*{summary}" rows="3"
+                                  placeholder="Leave empty to generate the summary automatically from the system data"></textarea>
                     </div>
                 </div>
 
@@ -61,7 +62,7 @@
             </form>
         </div>
     </div>
-</div>
+</main>
 
 <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>

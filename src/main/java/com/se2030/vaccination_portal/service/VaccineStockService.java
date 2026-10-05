@@ -1,6 +1,9 @@
 package com.se2030.vaccination_portal.service;
 
 import com.se2030.vaccination_portal.model.VaccineStock;
+import com.se2030.vaccination_portal.pattern.strategy.AlphanumericRule;
+import com.se2030.vaccination_portal.pattern.strategy.StockDatesRule;
+import com.se2030.vaccination_portal.pattern.strategy.ValidationStrategy;
 import com.se2030.vaccination_portal.repository.VaccineStockRepository;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +11,13 @@ import java.util.List;
 
 @Service
 public class VaccineStockService {
+
+    // Strategy pattern: each rule is a separate strategy object
+    private final ValidationStrategy<String> vaccineNameRule = new AlphanumericRule("Vaccine name");
+    private final ValidationStrategy<String> batchNumberRule = new AlphanumericRule("Batch number");
+    private final ValidationStrategy<String> manufacturerRule = new AlphanumericRule("Manufacturer");
+    private final ValidationStrategy<String> storageLocationRule = new AlphanumericRule("Storage location");
+    private final ValidationStrategy<VaccineStock> datesRule = new StockDatesRule();
 
     private final VaccineStockRepository vaccineStockRepository;
 
@@ -33,23 +43,13 @@ public class VaccineStockService {
     }
 
     public VaccineStock createStock(VaccineStock stock) {
-        if (stock.getVaccineName() == null || stock.getVaccineName().isBlank()) {
-            throw new IllegalArgumentException("Vaccine name is required");
-        }
-        if (stock.getQuantityAvailable() == null || stock.getQuantityAvailable() < 0) {
-            throw new IllegalArgumentException("Quantity available must be zero or more");
-        }
+        validateStock(stock);
         return vaccineStockRepository.save(stock);
     }
 
     public VaccineStock updateStock(Long id, VaccineStock updatedStock) {
         VaccineStock existingStock = getStockById(id);
-        if (updatedStock.getVaccineName() == null || updatedStock.getVaccineName().isBlank()) {
-            throw new IllegalArgumentException("Vaccine name is required");
-        }
-        if (updatedStock.getQuantityAvailable() == null || updatedStock.getQuantityAvailable() < 0) {
-            throw new IllegalArgumentException("Quantity available must be zero or more");
-        }
+        validateStock(updatedStock);
         existingStock.setVaccineName(updatedStock.getVaccineName());
         existingStock.setBatchNumber(updatedStock.getBatchNumber());
         existingStock.setManufacturer(updatedStock.getManufacturer());
@@ -63,5 +63,19 @@ public class VaccineStockService {
     public void deleteStock(Long id) {
         VaccineStock stock = getStockById(id);
         vaccineStockRepository.delete(stock);
+    }
+
+    private void validateStock(VaccineStock stock) {
+        if (stock.getVaccineName() == null || stock.getVaccineName().isBlank()) {
+            throw new IllegalArgumentException("Vaccine name is required");
+        }
+        vaccineNameRule.validate(stock.getVaccineName());
+        batchNumberRule.validate(stock.getBatchNumber());
+        manufacturerRule.validate(stock.getManufacturer());
+        storageLocationRule.validate(stock.getStorageLocation());
+        if (stock.getQuantityAvailable() == null || stock.getQuantityAvailable() < 0) {
+            throw new IllegalArgumentException("Quantity available must be zero or more");
+        }
+        datesRule.validate(stock);
     }
 }

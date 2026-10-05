@@ -1,6 +1,7 @@
 package com.se2030.vaccination_portal.service;
 
 import com.se2030.vaccination_portal.model.AdverseReaction;
+import com.se2030.vaccination_portal.pattern.observer.Observer;
 import com.se2030.vaccination_portal.repository.AdverseReactionRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +12,13 @@ public class AdverseReactionService {
 
     private final AdverseReactionRepository adverseReactionRepository;
 
-    public AdverseReactionService(AdverseReactionRepository adverseReactionRepository) {
+    // Observer pattern: this service is the subject, the observers react when a reaction is reported
+    private final List<Observer<AdverseReaction>> observers;
+
+    public AdverseReactionService(AdverseReactionRepository adverseReactionRepository,
+                                  List<Observer<AdverseReaction>> observers) {
         this.adverseReactionRepository = adverseReactionRepository;
+        this.observers = observers;
     }
 
     public List<AdverseReaction> getAllReactions() {
@@ -31,7 +37,11 @@ public class AdverseReactionService {
         if (reaction.getReportedDate() == null) {
             throw new IllegalArgumentException("Reported date is required");
         }
-        return adverseReactionRepository.save(reaction);
+        AdverseReaction saved = adverseReactionRepository.save(reaction);
+        for (Observer<AdverseReaction> observer : observers) {
+            observer.update(saved);
+        }
+        return saved;
     }
 
     public AdverseReaction updateReaction(Long id, AdverseReaction updatedReaction) {

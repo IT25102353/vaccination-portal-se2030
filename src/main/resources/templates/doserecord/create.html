@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: pageHead('New Appointment')}"></head>
+<head th:replace="~{fragments/layout :: pageHead('New Dose Record')}"></head>
 <body>
-<nav th:replace="~{fragments/layout :: navbar('appointments')}"></nav>
+<nav th:replace="~{fragments/layout :: navbar('dose-records')}"></nav>
 
 <main class="container">
     <div class="page-header">
-        <h1><i data-lucide="calendar-plus"></i> New Appointment</h1>
+        <h1><i data-lucide="clipboard-plus"></i> New Dose Record</h1>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <form th:action="@{/appointments/save}" th:object="${appointment}" method="post">
+            <form th:action="@{/dose-records/save}" th:object="${doseRecord}" method="post">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Patient Name</label>
-                        <input type="text" class="form-control" th:field="*{patientName}" required>
-                    </div>
-                    <div class="col-md-6">
                         <label class="form-label">Patient NIC</label>
-                        <input type="text" class="form-control" th:field="*{patientNic}" required>
+                        <select class="form-select" id="patientNicSelect" th:field="*{patientNic}" required>
+                            <option value="" disabled selected>Select a patient</option>
+                            <option th:each="p : ${patients}" th:value="${p.patientNic}" th:attr="data-name=${p.patientName}"
+                                    th:text="${p.patientName} + ' (' + ${p.patientNic} + ')'"></option>
+                        </select>
+                        <div th:if="${#lists.isEmpty(patients)}" class="form-text text-danger">
+                            No patients found. Add one under Appointments first.
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Contact Number</label>
-                        <input type="text" class="form-control" th:field="*{contactNumber}" pattern="[0-9]{10}" maxlength="10" title="Contact number must have exactly 10 digits" required>
+                        <label class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" id="patientNameInput" th:field="*{patientName}" readonly>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Vaccine Name</label>
@@ -36,7 +39,19 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Vaccination Center</label>
+                        <label class="form-label">Dose Number</label>
+                        <input type="number" min="1" class="form-control" th:field="*{doseNumber}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date Administered</label>
+                        <input type="date" class="form-control" th:field="*{dateAdministered}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Administered By</label>
+                        <input type="text" class="form-control" th:field="*{administeredBy}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Center Name</label>
                         <select class="form-select" th:field="*{centerName}" required>
                             <option value="" disabled selected>Select a center</option>
                             <option th:each="name : ${centerNames}" th:value="${name}" th:text="${name}"></option>
@@ -46,20 +61,8 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" th:field="*{status}" required>
-                            <option value="SCHEDULED">Scheduled</option>
-                            <option value="COMPLETED">Completed</option>
-                            <option value="CANCELLED">Cancelled</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Appointment Date</label>
-                        <input type="date" class="form-control" th:field="*{appointmentDate}" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Appointment Time</label>
-                        <input type="time" class="form-control" th:field="*{appointmentTime}" required>
+                        <label class="form-label">Certificate Number</label>
+                        <input type="text" class="form-control" th:field="*{certificateNumber}" required>
                     </div>
                 </div>
 
@@ -67,7 +70,7 @@
                     <button type="submit" class="btn btn-primary icon-btn">
                         <i data-lucide="save"></i> Save
                     </button>
-                    <a href="/appointments" class="btn btn-outline-secondary icon-btn">
+                    <a href="/dose-records" class="btn btn-outline-secondary icon-btn">
                         <i data-lucide="x"></i> Cancel
                     </a>
                 </div>
